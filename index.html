@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Şarjım Bitmişti 🔋</title>
+<style>
+:root{--bg:#fff6ef;--card:#ffffff;--ink:#2b2230;--mute:#7b6e82;--acc:#ff5d7a;--acc2:#ffb199;--bar:#eadfe6;--bub:#ffe3e8;--red:#ff4d4d;--org:#ffa83a;--grn:#2ecc71;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17131f;--card:#241e2e;--ink:#f6f0f8;--mute:#b6a9bf;--bar:#3a3146;--bub:#3a2535}}
+:root[data-theme="dark"]{--bg:#17131f;--card:#241e2e;--ink:#f6f0f8;--mute:#b6a9bf;--bar:#3a3146;--bub:#3a2535}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:440px;margin:0 auto;padding:24px 20px 48px}
+h1{font-size:1.5rem;line-height:1.25;margin:8px 0 6px;text-align:center}
+.sub{color:var(--mute);text-align:center;margin:0 0 22px}
+.phone{background:var(--card);border-radius:28px;padding:22px;box-shadow:0 10px 30px rgba(120,60,90,.12);text-align:center}
+.pct{font-size:3rem;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.bat{position:relative;height:30px;border-radius:10px;background:var(--bar);margin:10px 8px 0 0;border:2px solid var(--mute)}
+.bat::after{content:"";position:absolute;right:-9px;top:7px;width:6px;height:12px;border-radius:0 4px 4px 0;background:var(--mute)}
+.fill{height:100%;width:0;border-radius:7px;background:var(--red);transition:width .1s linear,background .3s}
+.plug{display:inline-block;animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:14px 22px;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--acc),#ff8a65);box-shadow:0 6px 16px rgba(255,93,122,.35);transition:transform .15s}
+button:active{transform:scale(.96)}
+button.ghost{background:var(--bar);color:var(--ink);box-shadow:none}
+.go{margin-top:20px;width:100%}
+#msgs{display:flex;flex-direction:column;gap:10px;margin:22px 0 0}
+.b{align-self:flex-start;max-width:88%;background:var(--bub);padding:11px 15px;border-radius:18px 18px 18px 4px;animation:pop .4s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.final{display:none;margin-top:26px;background:var(--card);border-radius:28px;padding:26px 22px;box-shadow:0 10px 30px rgba(120,60,90,.12);text-align:center;animation:pop .6s ease both}
+.final h2{margin:0 0 10px;font-size:1.6rem}
+.final p{margin:0 0 14px}
+.fix{list-style:none;padding:0;margin:0 0 20px;text-align:left}
+.fix li{background:var(--bar);border-radius:14px;padding:10px 14px;margin-bottom:8px}
+.row{display:flex;flex-direction:column;gap:10px}
+#reply{display:none;margin-top:18px;font-weight:600}
+.h{position:fixed;bottom:-30px;font-size:26px;pointer-events:none;animation:up 2.6s ease-in forwards;z-index:9}
+@keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.plug,.h{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bugün neden yazmadım? 🔋</h1>
+  <p class="sub">Kısa bir açıklamam var. Lütfen bir dakikanı ver.</p>
+
+  <div class="phone">
+    <div class="pct" id="pct">%0</div>
+    <div class="bat"><div class="fill" id="fill"></div></div>
+    <p id="state" style="color:var(--mute);margin:14px 0 0">Telefonum kapalı. Sabahtan beri böyle. 📴</p>
+    <button class="go" id="go"><span class="plug">🔌</span> Telefonu şarja tak</button>
+  </div>
+
+  <div id="msgs"></div>
+
+  <div class="final" id="final">
+    <h2>Özür dilerim 🙏</h2>
+    <p>Sana yazmak istedim. Ama şarjım bitti, şarj aleti de yanımda yoktu. Seni görmezden gelmedim, bunu bilmeni isterim.</p>
+    <p style="color:var(--mute)">Bir daha olmaması için:</p>
+    <ul class="fix">
+      <li>🔋 Yanıma powerbank alacağım</li>
+      <li>🔌 Çantaya yedek kablo koyacağım</li>
+      <li>⚠️ Şarj %20'nin altına düşerse önce sana haber vereceğim</li>
+    </ul>
+    <p><b>Beni affeder misin?</b></p>
+    <div class="row">
+      <button id="yes">Affettim 💛</button>
+      <button class="ghost" id="think">Biraz düşüneyim ⏳</button>
+    </div>
+    <div id="reply"></div>
+  </div>
+</div>
+
+<script>
+var steps=[
+ [8,"Sabah sana yazacaktım, telefon %3'teydi. Sonra ekran karardı. 📴"],
+ [30,"Şarj aleti yanımda olsaydı ilk işim sana yazmak olurdu."],
+ [55,"Telefon kapandı ama aklım bir an bile kapanmadı. 🙈"],
+ [80,"Seni umursamamak gibi bir niyetim hiç olmadı."],
+ [100,"Şarj doldu. İlk mesaj sana. 💌"]
+];
+var pct=0,i=0,t=null;
+var $=function(id){return document.getElementById(id)};
+function paint(){
+  $("pct").textContent="%"+pct;
+  var f=$("fill");f.style.width=pct+"%";
+  f.style.background=pct<20?"var(--red)":pct<60?"var(--org)":"var(--grn)";
+}
+$("go").onclick=function(){
+  this.style.display="none";
+  $("state").textContent="Şarj oluyor... ⚡";
+  t=setInterval(function(){
+    pct++;paint();
+    while(i<steps.length&&pct>=steps[i][0]){
+      var d=document.createElement("div");d.className="b";d.textContent=steps[i][1];
+      $("msgs").appendChild(d);i++;
+    }
+    if(pct>=100){
+      clearInterval(t);
+      $("state").textContent="Telefon açıldı. ✅";
+      setTimeout(function(){
+        var fn=$("final");fn.style.display="block";
+        setTimeout(function(){fn.scrollIntoView({behavior:"smooth",block:"center"})},100);
+      },700);
+    }
+  },50);
+};
+function hearts(){
+  for(var k=0;k<16;k++){
+    var h=document.createElement("div");h.className="h";
+    h.textContent=["💛","💖","🔋","✨"][k%4];
+    h.style.left=Math.random()*92+"vw";
+    h.style.animationDelay=(Math.random()*.9)+"s";
+    document.body.appendChild(h);
+    setTimeout(function(x){x.remove()},4000,h);
+  }
+}
+function say(txt){var r=$("reply");r.style.display="block";r.textContent=txt}
+$("yes").onclick=function(){say("Teşekkür ederim. Bir daha yanıma powerbank alırım, söz. 🔋💛");hearts()};
+$("think").onclick=function(){say("Tamam, acele yok. Ben buradayım, şarjım da %100. 🙂")};
+</script>
+</body>
+</html>
